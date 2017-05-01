@@ -27,27 +27,12 @@ function seedBlogPostData(){
       content: faker.lorem.paragraph()
     });
   }
-  // this will return a promise
+
   return BlogPost.insertMany(seedData);
 }
 
 
 
-// function generateBlogPostData(){
-//   return { 
-//     author: {
-//       firstName: faker.name.firstName(),
-//       lastName: faker.name.lastName()
-//     },
-//     title: faker.lorem.sentence(),
-//     content: faker.lorem.paragraph(),
-//     }
-// }
-
-// this function deletes the entire database.
-// we'll call it in an `afterEach` block below
-// to ensure  ata from one test does not stick
-// around for next one
 function tearDownDb() {
     console.warn('Deleting database');
     return mongoose.connection.dropDatabase();
@@ -55,10 +40,6 @@ function tearDownDb() {
 
 describe('Blogposts API resource', function() {
 
-  // we need each of these hook functions to return a promise
-  // otherwise we'd need to call a `done` callback. `runServer`,
-  // `seedpostData` and `tearDownDb` each return a promise,
-  // so we return the value returned by these function calls.
   before(function() {
     return runServer(TEST_DATABASE_URL);
   });
@@ -75,28 +56,15 @@ describe('Blogposts API resource', function() {
     return closeServer();
   })
 
-  // note the use of nested `describe` blocks.
-  // this allows us to make clearer, more discrete tests that focus
-  // on proving something small
   describe('GET endpoint', function() {
 
     it('should return all existing blogposts', function() {
-      // strategy:
-      //    1. get back all posts returned by by GET request to `/posts`
-      //    2. prove res has right status, data type
-      //    3. prove the number of posts we got back is equal to number
-      //       in db.
-      //
-      // need to have access to mutate and access `res` across
-      // `.then()` calls below, so declare it here so can modify in place
-      let res;
+    let res;
       return chai.request(app)
         .get('/posts')
         .then(function(_res) {
-          // so subsequent .then blocks can access resp obj.
           res = _res;
           res.should.have.status(200);
-          // otherwise our db seeding didn't work
           res.body.should.have.length.of.at.least(1);
           return BlogPost.count();
         })
@@ -107,8 +75,7 @@ describe('Blogposts API resource', function() {
 
 
     it('should return blogposts with right fields', function() {
-      // Strategy: Get back all posts, and ensure they have expected keys
-
+      
       let resPosts;
       return chai.request(app)
         .get('/posts')
@@ -138,10 +105,6 @@ describe('Blogposts API resource', function() {
   });
 
   describe('POST endpoint', function() {
-    // strategy: make a POST request with data,
-    // then prove that the post we get back has
-    // right keys, and that `id` is there (which means
-    // the data was inserted into db)
     it('should add a new post', function() {
 
       const newPost = {
@@ -164,7 +127,6 @@ describe('Blogposts API resource', function() {
           res.body.should.include.keys(
             'id', 'title', 'author', 'created', 'content');
           res.body.title.should.equal(newPost.title);
-          // cause Mongo should have created id on insertion
           res.body.id.should.not.be.null;
           res.body.author.should.equal(`${newPost.author.firstName} ${newPost.author.lastName}`);
           res.body.content.should.equal(newPost.content);
@@ -183,11 +145,7 @@ describe('Blogposts API resource', function() {
 
   describe('PUT endpoint', function() {
 
-    // strategy:
-    //  1. Get an existing post from db
-    //  2. Make a PUT request to update that post
-    //  3. Prove post returned by request contains data we sent
-    //  4. Prove post in db is correctly updated
+  
     it('should update fields you send over', function() {
       const updateData = {
         title: 'fofofofofofofof',
@@ -203,9 +161,6 @@ describe('Blogposts API resource', function() {
         .exec()
         .then(function(post) {
           updateData.id = post.id;
-
-          // make request then inspect it to make sure it reflects
-          // data we sent
           return chai.request(app)
             .put(`/posts/${post.id}`)
             .send(updateData);
@@ -229,11 +184,7 @@ describe('Blogposts API resource', function() {
   });
 
   describe('DELETE endpoint', function() {
-    // strategy:
-    //  1. get a post
-    //  2. make a DELETE request for that post's id
-    //  3. assert that response has right status code
-    //  4. prove that post with the id doesn't exist in db anymore
+ 
     it('delete a post by id', function() {
 
       let post;
@@ -250,10 +201,7 @@ describe('Blogposts API resource', function() {
           return BlogPost.findById(post.id).exec();
         })
         .then(function(_post) {
-          // when a variable's value is null, chaining `should`
-          // doesn't work. so `_post.should.be.null` would raise
-          // an error. `should.be.null(_post)` is how we can
-          // make assertions about a null value.
+    
           should.not.exist(_post);
         });
     });
