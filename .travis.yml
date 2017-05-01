@@ -2,5 +2,10 @@ language: node_js
 node_js: node
 services:
 - mongodb
-
-
+deploy:
+  provider: heroku
+  api_key:
+    secure: LtOfLvHdqTbfxndX9mQjNH5lCPD7TLdv2ANRcw6a/mDeOajDK8w8Zzq87U++1puYiZTKSUaPEU4mL7UmmNKXfQUqeJ8pkKFFm1viHEfC83mqFQOovRMSZ2R0GLeaPwfjaNUAwjDORf16PzFU7oGq1CI/caj56vQh5i7W1B7fnsQdYlwWi0EX6ZaBveM6ru7YrVih/dgCLiau/g42rsf5E7ZCrbfZFfIzjPIuERgCVCtpHH6uVPAlAUkYr2/6th5KkpEitGzBRhL57ezPMsmnJbDc0jKd0c7Uz0u5x6ks9qo4jn53sCHuAEBFvE3dQPaHMv1hHli7chXOHOsZfIIe9+QUnrtQRhFqVZRSpJo88D5g5M6x6tuDP8uzPXJfZ/DYqIMZJXuvnnsdy+XHKMtBH49zsba+vyXdL0z9PBtTiGQ2fYKik7TN6htrgaFuB30VtP/bxvpcH3grlS2rOdsDmn2OfSB2gWHyY3MQCeYDf+aGa8n7wsb57nDHXhrmJLETzgISeF0emWM6/mKb5QKdItSpg7A9DDhiWcNrIUCnalHWEpw1zMy+lVusQv17jmwItu3uL4M+FYvGEf1ydpdx98UMTeg1iXjaRrVUklsOAVd15isK+6ibZVghBgJGdFJMhJ02RYVQagmISnRPNxJq2OGRLI1UDeaWciISqBKNb3g=
+  app: polar-springs-43269
+  on:
+    repo: trinehaave/blog-app-mongoose-challenge-solution
